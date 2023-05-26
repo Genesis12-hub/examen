@@ -1,0 +1,224 @@
+import { Empresa } from "./Empresa";
+import * as readline from "readline";
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+const empresa = new Empresa();
+
+function agregarPersona() {
+  rl.question("Nombre: ", (nombre) => {
+    rl.question("Apellidos: ", (apellidos) => {
+      rl.question("Identificación: ", (identificacion) => {
+        rl.question("Estado Civil: ", (estadoCivil) => {
+          rl.question("Tipo de persona (1. Empleado, 2. Estudiante, 3. Profesor, 4. Personal de Servicio): ", (tipoPersona) => {
+            if (tipoPersona === "1") {
+              rl.question("Año de incorporación: ", (anioIncorporacion) => {
+                rl.question("Despacho: ", (despacho) => {
+                  empresa.agregarEmpleado(
+                    nombre,
+                    apellidos,
+                    identificacion,
+                    estadoCivil,
+                    parseInt(anioIncorporacion),
+                    despacho
+                  );
+                  console.log("Empleado agregado exitosamente.");
+                  mostrarMenu();
+                });
+              });
+            } else if (tipoPersona === "2") {
+              rl.question("Curso: ", (curso) => {
+                empresa.agregarEstudiante(
+                  nombre,
+                  apellidos,
+                  identificacion,
+                  estadoCivil,
+                  curso
+                );
+                console.log("Estudiante agregado exitosamente.");
+                mostrarMenu();
+              });
+            } else if (tipoPersona === "3") {
+              rl.question("Departamento: ", (departamento) => {
+                empresa.agregarProfesor(
+                  nombre,
+                  apellidos,
+                  identificacion,
+                  estadoCivil,
+                  departamento
+                );
+                console.log("Profesor agregado exitosamente.");
+                mostrarMenu();
+              });
+            } else if (tipoPersona === "4") {
+              rl.question("Sección: ", (seccion) => {
+                empresa.agregarPersonalServicio(
+                  nombre,
+                  apellidos,
+                  identificacion,
+                  estadoCivil,
+                  seccion
+                );
+                console.log("Personal de Servicio agregado exitosamente.");
+                mostrarMenu();
+              });
+            } else {
+              console.log("Tipo de persona no válido.");
+              mostrarMenu();
+            }
+          });
+        });
+      });
+    });
+  });
+}
+
+function cambiarEstadoCivil() {
+  rl.question("Identificación de la persona: ", (identificacion) => {
+    const personas = [
+      ...empresa.empleados,
+      ...empresa.estudiantes,
+      ...empresa.profesores,
+      ...empresa.personalServicio,
+    ];
+    const personaEncontrada = personas.find(
+      (persona) => persona.identificacion === identificacion
+    );
+
+    if (personaEncontrada) {
+      rl.question("Nuevo estado civil: ", (nuevoEstadoCivil) => {
+        personaEncontrada.cambiarEstadoCivil(nuevoEstadoCivil);
+        console.log("Estado civil cambiado exitosamente.");
+        mostrarMenu();
+      });
+    } else {
+      console.log("Persona no encontrada.");
+      mostrarMenu();
+    }
+  });
+}
+
+function reasignarDespacho() {
+  rl.question("Identificación del empleado: ", (identificacion) => {
+    const empleadoEncontrado = empresa.empleados.find(
+      (empleado) => empleado.identificacion === identificacion
+    );
+
+    if (empleadoEncontrado) {
+      rl.question("Nuevo despacho: ", (nuevoDespacho) => {
+        empleadoEncontrado.reasignarDespacho(nuevoDespacho);
+        console.log("Despacho reasignado exitosamente.");
+        mostrarMenu();
+      });
+    } else {
+      console.log("Empleado no encontrado.");
+      mostrarMenu();
+    }
+  });
+}
+
+function matricularEstudiante() {
+  rl.question("Identificación del estudiante: ", (identificacion) => {
+    const estudianteEncontrado = empresa.estudiantes.find(
+      (estudiante) => estudiante.identificacion === identificacion
+    );
+
+    if (estudianteEncontrado) {
+      rl.question("Nuevo curso: ", (nuevoCurso) => {
+        estudianteEncontrado.matricularEstudiante(nuevoCurso);
+        console.log("Estudiante matriculado exitosamente.");
+        mostrarMenu();
+      });
+    } else {
+      console.log("Estudiante no encontrado.");
+      mostrarMenu();
+    }
+  });
+}
+
+function cambiarDepartamento() {
+  rl.question("Identificación del profesor: ", (identificacion) => {
+    const profesorEncontrado = empresa.profesores.find(
+      (profesor) => profesor.identificacion === identificacion
+    );
+
+    if (profesorEncontrado) {
+      rl.question("Nuevo departamento: ", (nuevoDepartamento) => {
+        profesorEncontrado.cambiarDepartamento(nuevoDepartamento);
+        console.log("Departamento cambiado exitosamente.");
+        mostrarMenu();
+      });
+    } else {
+      console.log("Profesor no encontrado.");
+      mostrarMenu();
+    }
+  });
+}
+
+function trasladarSeccion() {
+  rl.question("Identificación del personal de servicio: ", (identificacion) => {
+    const personalEncontrado = empresa.personalServicio.find(
+      (personal) => personal.identificacion === identificacion
+    );
+
+    if (personalEncontrado) {
+      rl.question("Nueva sección: ", (nuevaSeccion) => {
+        personalEncontrado.trasladarSeccion(nuevaSeccion);
+        console.log("Sección trasladada exitosamente.");
+        mostrarMenu();
+      });
+    } else {
+      console.log("Personal de servicio no encontrado.");
+      mostrarMenu();
+    }
+  });
+}
+
+function imprimirInformacion() {
+  empresa.imprimirInformacion();
+  mostrarMenu();
+}
+
+function mostrarMenu() {
+  console.log("");
+  console.log("====== Menú ======");
+  console.log("1. Agregar persona");
+  console.log("2. Cambiar estado civil de una persona");
+  console.log("3. Reasignar despacho a un empleado");
+  console.log("4. Matricular estudiante en un nuevo curso");
+  console.log("5. Cambiar departamento de un profesor");
+  console.log("6. Trasladar sección de un empleado del personal de servicio");
+  console.log("7. Imprimir información de cada tipo de individuo");
+  console.log("8. Salir");
+  console.log("===================");
+
+  rl.question("Seleccione una opción: ", (opcion) => {
+    if (opcion === "1") {
+      agregarPersona();
+    } else if (opcion === "2") {
+      cambiarEstadoCivil();
+    } else if (opcion === "3") {
+      reasignarDespacho();
+    } else if (opcion === "4") {
+      matricularEstudiante();
+    } else if (opcion === "5") {
+      cambiarDepartamento();
+    } else if (opcion === "6") {
+      trasladarSeccion();
+    } else if (opcion === "7") {
+      imprimirInformacion();
+    } else if (opcion === "8") {
+      console.log("Gracias, vuelva pronto!");
+      rl.close();
+    } else {
+      console.log("Opción inválida.");
+      mostrarMenu();
+    }
+  });
+}
+
+console.log("Bienvenido al sistema de gestión de la empresa.");
+mostrarMenu();
