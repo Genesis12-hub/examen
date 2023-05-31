@@ -1,0 +1,45 @@
+lass Bus {
+    private marca: string;
+    private modelo: string;
+    private capacidad: number;
+    private año: number;
+
+    constructor(marca: string = "", modelo: string = "", capacidad: number = 0, año: number = 0) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.capacidad = capacidad;
+        this.año = año;
+    }public getMarca(): string {
+        return this.marca;
+    }
+
+    public setMarca(marca: string): void {
+        this.marca = marca;
+    }
+
+    public getModelo(): string {
+        return this.modelo;
+    }
+
+    public setModelo(modelo: string): void {
+        this.modelo = modelo;
+    }
+
+    public getCapacidad(): number {
+        return this.capacidad;
+    }
+
+    public setCapacidad(capacidad: number): void {
+        public getAño(): number {
+            return this.año;
+        }
+    
+        public setAño(año: number): void {
+            this.año = año;
+        }
+    
+        public obtenerInformacion(): string {
+            return `Marca: ${this.marca}\n` +
+                `Modelo: ${this.modelo}\n` +
+                `Capacidad: ${this.capacidad}\n` +
+                `Año: ${this.año}`;}
