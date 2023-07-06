@@ -1,0 +1,247 @@
+// Clase Singleton que garantiza que solo haya una instancia de la clase en todo el programa.
+class Singleton {
+  private static instance: Singleton;
+
+  private constructor() {
+    // Constructor privado para evitar instanciación directa
+  }
+
+  /**
+   * Método estático para obtener la única instancia de la clase Singleton.
+   * Si no existe una instancia previa, se crea una nueva.
+   * @returns Instancia única de la clase Singleton.
+   */
+  public static getInstance(): Singleton {
+    if (!Singleton.instance) {
+      Singleton.instance = new Singleton();
+    }
+    return Singleton.instance;
+  }
+}
+
+/**
+ * Clase que representa un cine y contiene una lista de películas.
+ */
+class Cine {
+  private peliculas: Pelicula[];
+
+  constructor() {
+    this.peliculas = [];
+  }
+
+  /**
+   * Agrega una película a la lista de películas del cine.
+   * @param pelicula Película a agregar.
+   */
+  public agregarPelicula(pelicula: Pelicula) {
+    this.peliculas.push(pelicula);
+  }
+}
+
+/**
+ * Clase que representa una película y contiene su nombre, tipo y una lista de salas en las que se proyecta.
+ */
+class Pelicula {
+  private nombre: string;
+  private tipo: string;
+  private salas: Sala[];
+
+  constructor(nombre: string, tipo: string) {
+    this.nombre = nombre;
+    this.tipo = tipo;
+    this.salas = [];
+  }
+
+  /**
+   * Agrega una sala a la lista de salas en las que se proyecta la película.
+   * @param sala Sala a agregar.
+   */
+  public agregarSala(sala: Sala) {
+    this.salas.push(sala);
+  }
+
+  /**
+   * Obtiene el nombre de la película.
+   * @returns Nombre de la película.
+   */
+  public getNombre() {
+    return this.nombre;
+  }
+
+  /**
+   * Obtiene el tipo de la película.
+   * @returns Tipo de la película.
+   */
+  public getTipo() {
+    return this.tipo;
+  }
+}
+
+/**
+ * Clase base que representa una sala de cine con un número y la cantidad de asientos disponibles.
+ * También contiene una lista de aperitivos disponibles en la sala.
+ */
+class Sala {
+  protected numero: number;
+  protected asientosDisponibles: number;
+  protected aperitivos: Aperitivo[];
+
+  constructor(numero: number, asientosDisponibles: number) {
+    this.numero = numero;
+    this.asientosDisponibles = asientosDisponibles;
+    this.aperitivos = [];
+  }
+
+  /**
+   * Agrega un aperitivo a la lista de aperitivos disponibles en la sala.
+   * @param aperitivo Aperitivo a agregar.
+   */
+  public agregarAperitivo(aperitivo: Aperitivo) {
+    this.aperitivos.push(aperitivo);
+  }
+
+  /**
+   * Obtiene el número de la sala.
+   * @returns Número de la sala.
+   */
+  public getNumero() {
+    return this.numero;
+  }
+
+  /**
+   * Obtiene la cantidad de asientos disponibles en la sala.
+   * @returns Cantidad de asientos disponibles.
+   */
+  public getAsientosDisponibles() {
+    return this.asientosDisponibles;
+  }
+
+  /**
+   * Obtiene la lista de aperitivos disponibles en la sala.
+   * @returns Lista de aperitivos disponibles.
+   */
+  public getAperitivos() {
+    return this.aperitivos;
+  }
+}
+
+/**
+ * Clase que hereda de Sala y representa una sala VIP con un servicio VIP adicional.
+ */
+class SalaVIP extends Sala {
+  private servicioVIP: string;
+
+  constructor(numero: number, asientosDisponibles: number, servicioVIP: string) {
+    super(numero, asientosDisponibles);
+    this.servicioVIP = servicioVIP;
+  }
+
+  /**
+   * Obtiene el servicio VIP de la sala VIP.
+   * @returns Servicio VIP de la sala.
+   */
+  public getServicioVIP() {
+    return this.servicioVIP;
+  }
+}
+
+/**
+ * Clase que representa un cliente que asiste a una película en una sala específica.
+ * Contiene el nombre del cliente, la película, la sala, el asiento asignado y una lista de aperitivos solicitados.
+ */
+class Cliente {
+  private nombre: string;
+  private pelicula: Pelicula;
+  private sala: Sala;
+  private asiento: string;
+  private aperitivos: Aperitivo[];
+
+  constructor(nombre: string, pelicula: Pelicula, sala: Sala, asiento: string) {
+    this.nombre = nombre;
+    this.pelicula = pelicula;
+    this.sala = sala;
+    this.asiento = asiento;
+    this.aperitivos = [];
+  }
+
+  /**
+   * Agrega un aperitivo a la lista de aperitivos solicitados por el cliente.
+   * @param aperitivo Aperitivo a agregar.
+   */
+  public agregarAperitivo(aperitivo: Aperitivo) {
+    this.aperitivos.push(aperitivo);
+  }
+
+  /**
+   * Muestra los detalles del cliente por la consola, incluyendo su nombre, tipo de película,
+   * película escogida, sala de cine, asiento asignado, aperitivos suministrados en la sala y
+   * aperitivos solicitados por el cliente.
+   */
+  public mostrarDetalle() {
+    console.log("Nombre del cliente: " + this.nombre);
+    console.log("Tipo de película: " + this.pelicula.getTipo());
+    console.log("Película escogida: " + this.pelicula.getNombre());
+    console.log("Sala de cine: " + this.sala.getNumero());
+    console.log("Asiento: " + this.asiento);
+    console.log("Aperitivos suministrados en la sala:");
+    this.sala.getAperitivos().forEach((aperitivo) => {
+      console.log("- " + aperitivo.getNombre());
+    });
+    console.log("Aperitivos solicitados por el cliente:");
+    this.aperitivos.forEach((aperitivo) => {
+      console.log("- " + aperitivo.getNombre());
+    });
+  }
+}
+
+/**
+ * Clase que representa un aperitivo disponible en el cine.
+ */
+class Aperitivo {
+  private nombre: string;
+
+  constructor(nombre: string) {
+    this.nombre = nombre;
+  }
+
+  /**
+   * Obtiene el nombre del aperitivo.
+   * @returns Nombre del aperitivo.
+   */
+  public getNombre() {
+    return this.nombre;
+  }
+}
+
+// Creación de instancias y uso de las clases
+
+// Se crea una instancia del cine
+const cine = new Cine();
+
+// Se crea una instancia de una película
+const pelicula = new Pelicula("John Wick", "Acción");
+
+// Se crea una sala VIP
+const sala = new SalaVIP(1, 50, "Servicio de lujo");
+
+// Se crea un cliente
+const cliente = new Cliente("John Doe", pelicula, sala, "A1");
+
+// Se crean dos aperitivos
+const aperitivo1 = new Aperitivo("Canguil");
+const aperitivo2 = new Aperitivo("Hot-dog");
+
+// Se agregan la sala y los aperitivos a la película
+pelicula.agregarSala(sala);
+sala.agregarAperitivo(aperitivo1);
+sala.agregarAperitivo(aperitivo2);
+
+// Se agregan los aperitivos al cliente
+cliente.agregarAperitivo(aperitivo1);
+cliente.agregarAperitivo(aperitivo2);
+
+// Se agrega la película al cine
+cine.agregarPelicula(pelicula);
+
+// Se muestra el detalle del cliente
+cliente.mostrarDetalle();
