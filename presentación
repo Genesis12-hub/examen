@@ -1,0 +1,162 @@
+import * as readline from 'readline';
+import ListaComprasSingleton from '../logic/listaComprasSingleton';
+import ListaCompras from '../logic/listaCompras';
+import ProductoComprado from '../data/productoComprado';
+
+class App {
+  private listasCompras: ListaComprasSingleton;
+  private rl: readline.Interface;
+  private listaActual: ListaCompras | null;
+
+  constructor() {
+    this.listasCompras = ListaComprasSingleton.getInstance();
+    this.rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    this.listaActual = null;
+  }
+
+  public iniciar(): void {
+    console.log('Bienvenido a la aplicación de gestión de compras.');
+
+    this.rl.question('¿Desea crear una nueva lista de compras? (s/n): ', (respuesta) => {
+      if (respuesta.toLowerCase() === 's') {
+        this.crearNuevaLista();
+      } else {
+        this.mostrarListasCompras();
+        this.rl.close();
+      }
+    });
+  }
+
+  private crearNuevaLista(): void {
+    this.rl.question('Ingrese el nombre de la lista de compras: ', (nombreLista) => {
+      this.listaActual = this.listasCompras.crearListaCompras(nombreLista);
+      console.log(`Se ha creado la lista "${nombreLista}".`);
+
+      this.rl.question('¿Desea agregar un producto a la lista de compras? (s/n): ', (respuesta) => {
+        if (respuesta.toLowerCase() === 's') {
+          this.capturarProducto();
+        } else {
+          this.mostrarOpcionesLista();
+        }
+      });
+    });
+  }
+
+  private capturarProducto(): void {
+    this.rl.question('Ingrese el nombre del producto: ', (nombre) => {
+      this.rl.question('Ingrese el precio del producto: ', (precio) => {
+        this.rl.question('Ingrese la categoría del producto: ', (categoria) => {
+          this.rl.question('Ingrese la fecha de compra (YYYY-MM-DD): ', (fechaCompra) => {
+            this.rl.question('Ingrese la cantidad del producto: ', (cantidad) => {
+              const producto = new ProductoComprado(
+                nombre,
+                parseFloat(precio),
+                categoria,
+                new Date(fechaCompra),
+                parseInt(cantidad, 10)
+              );
+              if (this.listaActual) {
+                this.listaActual.agregarProducto(producto);
+                console.log('Producto agregado a la lista de compras.');
+              }
+
+              this.rl.question('¿Desea agregar otro producto a la lista de compras? (s/n): ', (respuesta) => {
+                if (respuesta.toLowerCase() === 's') {
+                  this.capturarProducto();
+                } else {
+                  this.mostrarOpcionesLista();
+                }
+              });
+            });
+          });
+        });
+      });
+    });
+  }
+
+  private mostrarOpcionesLista(): void {
+    if (this.listaActual) {
+      console.log(`Lista de compras "${this.listaActual.getNombre()}":`);
+      const productos = this.listaActual.obtenerLista();
+      productos.forEach((producto) => {
+        console.log(`- ${producto.getNombre()} | Precio: $${producto.getPrecio()} | Cantidad: ${producto.getCantidad()}`);
+      });
+    } else {
+      console.log('No hay una lista de compras actualmente.');
+    }
+
+    this.rl.question(
+      'Seleccione una opción:\n1. Agregar otro producto\n2. Eliminar producto de la lista\n3. Crear otra lista de compras\n4. Mostrar todas las listas de compras\n5. Salir\n',
+      (opcion) => {
+        switch (opcion) {
+          case '1':
+            this.capturarProducto();
+            break;
+          case '2':
+            this.eliminarProducto();
+            break;
+          case '3':
+            this.crearNuevaLista();
+            break;
+          case '4':
+            this.mostrarListasCompras();
+            break;
+          case '5':
+            this.rl.close();
+            break;
+          default:
+            console.log('Opción inválida. Por favor, seleccione una opción válida.');
+            this.mostrarOpcionesLista();
+            break;
+        }
+      }
+    );
+  }
+
+  private eliminarProducto(): void {
+    if (!this.listaActual) {
+      console.log('No hay una lista de compras actualmente.');
+      this.mostrarOpcionesLista();
+      return;
+    }
+
+    if (this.listaActual.obtenerCantidadProductos() === 0) {
+      console.log('La lista de compras está vacía. No hay productos para eliminar.');
+      this.mostrarOpcionesLista();
+      return;
+    }
+
+    this.rl.question('Ingrese el nombre del producto a eliminar: ', (nombreProducto) => {
+      const eliminado = this.listaActual?.eliminarProducto(nombreProducto);
+      if (eliminado) {
+        console.log(`Se eliminó el producto "${nombreProducto}" de la lista de compras.`);
+      } else {
+        console.log(`No se encontró el producto "${nombreProducto}" en la lista de compras.`);
+      }
+      this.mostrarOpcionesLista();
+    });
+  }
+
+  private mostrarListasCompras(): void {
+    const listas = this.listasCompras.obtenerListas();
+    if (listas.length === 0) {
+      console.log('No hay listas de compras creadas.');
+    } else {
+      console.log('Listas de compras:');
+      listas.forEach((lista) => {
+        console.log(`- ${lista.getNombre()}:`);
+        const productos = lista.obtenerLista();
+        productos.forEach((producto) => {
+          console.log(`  - ${producto.getNombre()} | Precio: $${producto.getPrecio()} | Cantidad: ${producto.getCantidad()}`);
+        });
+      });
+    }
+    this.rl.close();
+  }
+}
+
+const app = new App();
+app.iniciar();
