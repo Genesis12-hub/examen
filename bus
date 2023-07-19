@@ -1,0 +1,44 @@
+type NewType = Observador;
+
+// singletonBus.ts
+
+class Bus {
+  private static instance: Bus;
+  private pasajeros: string[];
+  private observadores: ResizeObserver [];
+    notificar:any;
+
+  private constructor() {
+    this.pasajeros = [];
+    this.observadores = [];
+  }
+
+  public static getInstance(): Bus {
+    if (!Bus.instance) {
+      Bus.instance = new Bus();
+    }
+return Bus.instance;  }
+
+public agregarPasajero(pasajero: string): void {
+  const newLocal = this.pasajeros.push(pasajero);
+  this.notificarObservadores(pasajero, 'abordando');
+}
+
+public eliminarPasajero(pasajero: string): void {
+  const index = this.pasajeros.indexOf(pasajero);
+  if (index !== -1) {
+    this.pasajeros.splice(index, 1);
+    this.notificarObservadores(pasajero, 'descendiendo');
+  }
+}public suscribirObservador(observador: NewType): void {
+    this.observadores.push(observador);
+  }
+
+  private notificarObservadores(pasajero: string, accion: string): void {
+    for (const observador of this.observadores) {
+      observador.actualizar(pasajero, accion);
+    }
+  }
+}
+
+export { Bus };
