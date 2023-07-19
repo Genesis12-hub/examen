@@ -1,0 +1,27 @@
+// index.ts
+
+import { Bus } from "/singleton Bus";
+import { PasajeroBase, PasajeroDecorator } from "./pasajeroDecorator";
+import { ObservadorConsola } from "./observer";
+
+function probarAplicacionBus() {
+  const bus = Bus.getInstance();
+
+  const pasajeroBase = new PasajeroBase("Juan");
+  const pasajeroConAsiento = new PasajeroDecorator(pasajeroBase, 10);
+
+  const conductor = new ObservadorConsola();
+  const pasajero1 = new ObservadorConsola();
+  const pasajero2 = new ObservadorConsola();
+
+  bus.suscribirObservador(conductor);
+  bus.suscribirObservador(pasajero1);
+  bus.suscribirObservador(pasajero2);
+
+  bus.agregarPasajero(pasajeroConAsiento);
+  bus.agregarPasajero("María");
+  bus.eliminarPasajero(pasajeroConAsiento.nombre);
+}
+
+probarAplicacionBus();
+
