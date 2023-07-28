@@ -1,0 +1,34 @@
+// Definición de la clase Personaje
+class Personaje {
+  constructor(protected nombre: string) {}
+
+  // Método para obtener el nombre del personaje
+  ObtenerNombre(): string {
+    return this.nombre;
+  }
+}
+
+// Subclases de la clase Personaje
+class Goku extends Personaje {
+  constructor() {
+    super("Goku");
+  }
+}
+
+class Vegeta extends Personaje {
+  constructor() {
+    super("Vegeta");
+  }
+}
+
+class Gohan extends Personaje {
+  constructor() {
+    super("Gohan");
+  }
+}
+
+class Trunks extends Personaje {
+  constructor() {
+    super("Trunks");
+  }
+}

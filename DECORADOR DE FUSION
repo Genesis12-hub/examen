@@ -1,0 +1,35 @@
+// Decorador Fusion para agregar funcionalidad a la clase Personaje
+class Fusion extends Personaje {
+  protected personaje1: Personaje;
+  protected personaje2: Personaje;
+
+  constructor(personaje1: Personaje, personaje2: Personaje) {
+    // Se asigna un nombre compuesto a la fusión
+    super(`${personaje1.ObtenerNombre()} fusionando con ${personaje2.ObtenerNombre()}`);
+    this.personaje1 = personaje1;
+    this.personaje2 = personaje2;
+  }
+}
+
+// Subclases de la clase Fusion
+class Gogeta extends Fusion {
+  constructor(personaje1: Personaje, personaje2: Personaje) {
+    super(personaje1, personaje2);
+  }
+
+  // Método para obtener el nombre correcto de la fusión
+  ObtenerNombre(): string {
+    return "Gogeta";
+  }
+}
+
+class Gotenks extends Fusion {
+  constructor(personaje1: Personaje, personaje2: Personaje) {
+    super(personaje1, personaje2);
+  }
+
+  // Método para obtener el nombre correcto de la fusión
+  ObtenerNombre(): string {
+    return "Gotenks";
+  }
+}
